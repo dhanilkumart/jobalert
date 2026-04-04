@@ -14,7 +14,23 @@ export const useUser = () => {
       localStorage.setItem('jobalert_phone', phone);
     } catch (err: any) {
       setError(err.response?.data?.error || 'Failed to fetch user');
-      setUser(null);
+      
+      // BYPASS: If fetching guest fails (e.g. server error), use a local mock user
+      if (phone === 'guest_user') {
+        setUser({
+          name: 'Guest User',
+          phone: 'guest_user',
+          jobPreferences: [{ title: 'Developer', location: 'India' }],
+          sources: ['linkedin', 'naukri', 'shine', 'indeed'],
+          alertsEnabled: false,
+          frequency: 'instant'
+        } as any);
+      } else {
+        // If a real phone was saved but is now invalid/failed, clear it and try guest
+        localStorage.removeItem('jobalert_phone');
+        setUser(null);
+        fetchUser('guest_user');
+      }
     } finally {
       setLoading(false);
     }
@@ -44,8 +60,9 @@ export const useUser = () => {
   };
 
   const logout = () => {
-    setUser(null);
     localStorage.removeItem('jobalert_phone');
+    // BYPASS: After logout, go back to guest mode
+    fetchUser('guest_user');
   };
 
   useEffect(() => {
@@ -53,7 +70,8 @@ export const useUser = () => {
     if (savedPhone) {
       fetchUser(savedPhone);
     } else {
-      setLoading(false);
+      // BYPASS: Auto-login as guest if nothing found
+      fetchUser('guest_user');
     }
   }, []);
 

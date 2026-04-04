@@ -31,13 +31,9 @@ const App: React.FC = () => {
         <Route 
           path="/" 
           element={
-            user ? (
-              <Layout user={user} logout={logout}>
-                <DashboardPage />
-              </Layout>
-            ) : (
-              <Navigate to="/register" />
-            )
+            <Layout user={user || { name: 'Guest User', phone: 'guest_user' } as any} logout={logout}>
+              <DashboardPage />
+            </Layout>
           } 
         />
 

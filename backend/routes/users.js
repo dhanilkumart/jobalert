@@ -21,7 +21,21 @@ router.post('/register', async (req, res) => {
 // Get user profile
 router.get('/:phone', async (req, res) => {
   try {
-    const user = await User.findOne({ phone: req.params.phone });
+    const phone = req.params.phone;
+    let user = await User.findOne({ phone });
+
+    // BYPASS: Handle guest_user auto-provisioning
+    if (!user && phone === 'guest_user') {
+      user = await User.create({
+        name: 'Guest User',
+        phone: 'guest_user',
+        alertsEnabled: false,
+        jobPreferences: [
+          { title: 'Frontend Developer', location: 'India' }
+        ]
+      });
+    }
+
     if (!user) return res.status(404).json({ error: 'User not found' });
     res.json(user);
   } catch (err) {

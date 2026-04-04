@@ -52,7 +52,6 @@ async function fetchLinkedIn(keywords = ['developer', 'software engineer'], loca
           const title = $(el).find('.base-search-card__title').text().trim();
           const company = $(el).find('.base-search-card__subtitle').text().trim();
           const loc = $(el).find('.job-search-card__location').text().trim();
-          const loc = $(el).find('.job-search-card__location').text().trim();
           const link = $(el).find('a.base-card__full-link').attr('href') || '';
           const postedAt = $(el).find('time').attr('datetime');
           const salary = $(el).find('.job-search-card__salary-info').text().trim();

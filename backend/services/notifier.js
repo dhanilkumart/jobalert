@@ -55,8 +55,11 @@ function jobMatchesUser(job, user) {
 }
 
 async function sendWhatsApp(to, body) {
-  if (!client) {
-    console.log(`[DRY RUN] Would send to ${to}:\n${body}\n`);
+  // BYPASS: Always treat as DRY RUN. Logic remains but execution is skipped.
+  const isDryRun = true; 
+  
+  if (isDryRun || !client) {
+    console.log(`[BYPASS - DRY RUN] Would send to ${to}:\n${body}\n`);
     return;
   }
   const formattedPhone = to.startsWith('+') ? to : `+${to}`;

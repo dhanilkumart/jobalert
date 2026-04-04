@@ -38,6 +38,7 @@ app.get('/api/health', (req, res) => {
 });
 
 // ── Database ─────────────────────────────────────────────────────────────────
+mongoose.set('bufferCommands', false); // Fail fast if DB is down for mock fallbacks
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/jobalert')
   .then(() => console.log('✅ MongoDB connection initiated'))
   .catch(err => console.error('❌ MongoDB initial error:', err));
