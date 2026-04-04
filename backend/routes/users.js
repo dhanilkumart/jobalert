@@ -39,6 +39,22 @@ router.get('/:phone', async (req, res) => {
     if (!user) return res.status(404).json({ error: 'User not found' });
     res.json(user);
   } catch (err) {
+    console.error('User fetch error:', err.message);
+    
+    // BYPASS: If the database is down, always return a mock Guest User for 'guest_user' requests
+    if (req.params.phone === 'guest_user') {
+      return res.json({
+        name: 'Guest User (Mock)',
+        phone: 'guest_user',
+        alertsEnabled: false,
+        jobPreferences: [
+          { title: 'Frontend Developer', location: 'India' }
+        ],
+        sources: ['linkedin', 'naukri', 'shine', 'indeed'],
+        frequency: 'instant'
+      });
+    }
+
     res.status(400).json({ error: err.message });
   }
 });
