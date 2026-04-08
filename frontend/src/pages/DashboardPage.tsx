@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import api from '../utils/api';
 import type { Job, JobResponse } from '../types';
 import JobCard from '../components/JobCard';
-import { Search, MapPin, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
+import { Search, MapPin, Loader2 } from 'lucide-react';
 
 const DashboardPage: React.FC = () => {
   const [jobs, setJobs] = useState<Job[]>([]);
@@ -255,3 +255,4 @@ const DashboardPage: React.FC = () => {
 };
 
 export default DashboardPage;
+
