@@ -13,9 +13,14 @@ const Job = require('../models/Job');
 const path = require('path');
 
 const HEADERS = {
-  'User-Agent': 'Mozilla/5.0 (compatible; JobAlertBot/1.0; +https://yourdomain.com/bot)',
-  'Accept': 'text/html,application/xhtml+xml',
+  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+  'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
   'Accept-Language': 'en-US,en;q=0.9',
+  'Accept-Encoding': 'gzip, deflate, br',
+  'Cache-Control': 'max-age=0',
+  'Sec-Ch-Ua': '"Chromium";v="122", "Not(A:Brand";v="24", "Google Chrome";v="122"',
+  'Sec-Ch-Ua-Mobile': '?0',
+  'Sec-Ch-Ua-Platform': '"Windows"',
 };
 
 const DELAY_MS = 2000; // 2s between requests to same source
@@ -268,14 +273,20 @@ async function runFetchAndSave(keywords, locations) {
     fetchIndeed(keywords, locations)
   ]);
 
-  const allJobs = [
-    ...(li.status === 'fulfilled' ? li.value : []),
-    ...(nk.status === 'fulfilled' ? nk.value : []),
-    ...(sh.status === 'fulfilled' ? sh.value : []),
-    ...(ind.status === 'fulfilled' ? ind.value : [])
-  ];
+  const liJobs = li.status === 'fulfilled' ? li.value : [];
+  const nkJobs = nk.status === 'fulfilled' ? nk.value : [];
+  const shJobs = sh.status === 'fulfilled' ? sh.value : [];
+  const indJobs = ind.status === 'fulfilled' ? ind.value : [];
 
-  console.log(`  Fetched ${allJobs.length} raw jobs from all sources`);
+  console.log(`  Source Breakdown:`);
+  console.log(`    LinkedIn: ${liJobs.length} jobs`);
+  console.log(`    Naukri:   ${nkJobs.length} jobs`);
+  console.log(`    Shine:    ${shJobs.length} jobs`);
+  console.log(`    Indeed:   ${indJobs.length} jobs`);
+
+  const allJobs = [...liJobs, ...nkJobs, ...shJobs, ...indJobs];
+
+  console.log(`  Total raw jobs fetched: ${allJobs.length}`);
 
   // Upsert jobs, skip duplicates (dedupKey unique index)
   const newJobs = [];

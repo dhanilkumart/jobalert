@@ -5,6 +5,7 @@ const { fetchAllJobs, fetchCustomJob } = require('../services/jobFetcher');
 
 // List jobs with pagination
 router.get('/', async (req, res) => {
+  const MAX_JOBS = 100;
   const { source, title, location, page = 1, limit = 10 } = req.query;
   const query = {};
 
@@ -13,17 +14,28 @@ router.get('/', async (req, res) => {
   if (location) query.location = new RegExp(location, 'i');
 
   try {
-    const jobs = await Job.find(query)
-      .sort({ postedAt: -1 })
-      .skip((page - 1) * limit)
-      .limit(Number(limit));
+    // Determine how many jobs to skip, ensuring we don't exceed MAX_JOBS
+    const skip = (page - 1) * limit;
+    const currentLimit = Math.min(Number(limit), MAX_JOBS - skip);
 
-    const total = await Job.countDocuments(query);
+    let jobs = [];
+    let total = 0;
+
+    if (currentLimit > 0) {
+      jobs = await Job.find(query)
+        .sort({ postedAt: -1 })
+        .skip(skip)
+        .limit(currentLimit);
+      
+      const actualTotal = await Job.countDocuments(query);
+      total = Math.min(actualTotal, MAX_JOBS);
+    }
+
     res.json({
       jobs,
       total,
       page: Number(page),
-      pages: Math.ceil(total / limit)
+      pages: Math.ceil(total / Number(limit))
     });
   } catch (err) {
     console.error('Job query failed:', err.message);

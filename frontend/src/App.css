@@ -456,14 +456,50 @@ textarea {
 }
 
 /* ─── Dashboard Specifics ───────────────────────────────────────────────────── */
+.filters-section {
+  margin-bottom: 24px;
+}
+
+.quick-filters {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.filter-pill {
+  padding: 8px 18px;
+  background: var(--surface);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.2s;
+  font-family: var(--font-display);
+}
+
+.filter-pill:hover {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.filter-pill.active {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+  box-shadow: 0 4px 12px rgba(123, 97, 255, 0.2);
+}
+
 .filters-bar {
   display: flex;
   gap: 12px;
-  margin-bottom: 24px;
   background: var(--surface);
   padding: 12px;
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
 }
 
 .filter-input {
@@ -495,6 +531,41 @@ textarea {
   color: var(--text-primary);
   outline: none;
   cursor: pointer;
+  min-width: 140px;
+}
+
+.load-more-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+
+.load-more-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 40px;
+  background: var(--surface);
+  color: var(--accent);
+  border: 2px solid var(--accent);
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: var(--font-display);
+  transition: all 0.2s;
+}
+
+.load-more-btn:hover:not(:disabled) {
+  background: var(--accent);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(123, 97, 255, 0.2);
+}
+
+.load-more-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 /* ─── Preferences Page ──────────────────────────────────────────────────────── */
